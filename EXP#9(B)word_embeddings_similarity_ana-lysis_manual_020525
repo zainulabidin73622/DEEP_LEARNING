@@ -1,0 +1,161 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": []
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "code",
+      "source": [
+        "import numpy as np\n",
+        "from sklearn.metrics.pairwise import cosine_similarity\n",
+        "\n",
+        "# Define terms and vectors from the example\n",
+        "terms = [\n",
+        "    \"apple juice\",\n",
+        "    \"cappuccino\",\n",
+        "    \"cheese bread sticks\",\n",
+        "    \"cheese pizza\",\n",
+        "    \"cinnamon bread sticks\",\n",
+        "    \"donut\",\n",
+        "    \"green tea\",\n",
+        "    \"latte\",\n",
+        "    \"soda\",\n",
+        "    \"water\"\n",
+        "]\n",
+        "\n",
+        "vectors = np.array([\n",
+        "    [1, 5, 0, 0, 0, 4, 4, 3],\n",
+        "    [0, 5, 3, 0, 4, 1, 2, 3],\n",
+        "    [5, 0, 4, 5, 0, 1, 4, 2],\n",
+        "    [5, 0, 4, 4, 0, 1, 5, 2],\n",
+        "    [5, 0, 4, 5, 0, 1, 4, 2],\n",
+        "    [5, 0, 1, 5, 0, 4, 5, 1],\n",
+        "    [0, 5, 0, 0, 2, 1, 1, 5],\n",
+        "    [0, 5, 4, 0, 4, 1, 3, 3],\n",
+        "    [0, 5, 0, 0, 3, 5, 5, 0],\n",
+        "    [0, 5, 0, 0, 0, 0, 0, 5]\n",
+        "])\n"
+      ],
+      "metadata": {
+        "id": "XUl_yEyWC24E"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Function to calculate and print similarity scores"
+      ],
+      "metadata": {
+        "id": "sRxdX8e1DHif"
+      }
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "def print_similarities(target_term, all_terms, all_vectors):\n",
+        "    # Find the target term's index\n",
+        "    target_index = all_terms.index(target_term)\n",
+        "    target_vector = all_vectors[target_index].reshape(1, -1)\n",
+        "\n",
+        "    # Calculate cosine similarities with all other terms\n",
+        "    similarities = cosine_similarity(target_vector, all_vectors)[0]\n",
+        "\n",
+        "    # Pair terms with their similarity scores\n",
+        "    term_scores = list(zip(all_terms, similarities))\n",
+        "\n",
+        "    # Sort by similarity (descending) and exclude self-comparison\n",
+        "    term_scores_sorted = sorted(term_scores, key=lambda x: x[1], reverse=True)\n",
+        "    term_scores_sorted = [item for item in term_scores_sorted if item[0] != target_term]\n",
+        "\n",
+        "    # Print results\n",
+        "    print(f\"\\nVector Similarity Scores: {target_term}\")\n",
+        "    for term, score in term_scores_sorted:\n",
+        "        print(f\"{score:.2f} {term}\")\n"
+      ],
+      "metadata": {
+        "id": "HWal9PIeC7Ie"
+      },
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "source": [
+        "Calculate and print similarities for our target terms"
+      ],
+      "metadata": {
+        "id": "mH2bzVaWC-qj"
+      }
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "X4Z74WDbz412",
+        "outputId": "5438114b-ed0d-486e-89ce-80ce05a94a31"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "\n",
+            "Vector Similarity Scores: green tea\n",
+            "0.94 water\n",
+            "0.85 cappuccino\n",
+            "0.80 latte\n",
+            "0.78 apple juice\n",
+            "0.60 soda\n",
+            "0.23 cheese pizza\n",
+            "0.21 cheese bread sticks\n",
+            "0.21 cinnamon bread sticks\n",
+            "0.19 donut\n",
+            "\n",
+            "Vector Similarity Scores: cheese pizza\n",
+            "0.99 cheese bread sticks\n",
+            "0.99 cinnamon bread sticks\n",
+            "0.89 donut\n",
+            "0.47 latte\n",
+            "0.46 apple juice\n",
+            "0.39 cappuccino\n",
+            "0.35 soda\n",
+            "0.23 green tea\n",
+            "0.15 water\n",
+            "\n",
+            "Vector Similarity Scores: donut\n",
+            "0.89 cheese bread sticks\n",
+            "0.89 cheese pizza\n",
+            "0.89 cinnamon bread sticks\n",
+            "0.56 apple juice\n",
+            "0.51 soda\n",
+            "0.31 latte\n",
+            "0.26 cappuccino\n",
+            "0.19 green tea\n",
+            "0.07 water\n"
+          ]
+        }
+      ],
+      "source": [
+        "print_similarities(\"green tea\", terms, vectors)\n",
+        "print_similarities(\"cheese pizza\", terms, vectors)\n",
+        "print_similarities(\"donut\", terms, vectors)"
+      ]
+    }
+  ]
+}
